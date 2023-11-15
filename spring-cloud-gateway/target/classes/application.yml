@@ -1,0 +1,76 @@
+server:
+  port: 8080
+spring:
+  application:
+    name: SPRING-CLOUD-GATEWAY
+
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+      routes:
+        - id: product-service
+          uri: lb://product-service
+          predicates:
+            - Path=/product-service/**
+
+        - id: inventory-service
+          uri: lb://inventory-service
+          predicates:
+            - Path=/inventory-service/**
+
+        - id: notification-service
+          uri: lb://notification-service
+          predicates:
+            - Path=/notification-service/**
+
+        - id: order-service
+          uri: lb://order-service
+          predicates:
+            - Path=/order-service/**
+          filters:
+            - name: TokenRelay
+  # we must add the TokenRelay filter to any route that requires the access token to be propagated:
+  security:
+    oauth2:
+      client:
+        registration:
+          spring-boot-jwt:
+            provider: keycloak
+            clientId: spring-boot-jwt
+            clientSecret: LOZqgSj8LQemC5dKpeQkCOliNfmix3Xw
+            authorizationGrantType: authorization_code
+            redirectUri: http://localhost:8080/login/oauth2/code/spring-boot-jwt
+            scope:
+              - openid
+              - profile
+              - email
+        provider:
+          keycloak:
+            issuerUri: http://localhost:2023/realms/madeeasy-test-spring-boot
+
+
+eureka:
+  client:
+    enabled: true
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+springdoc:
+  swagger-ui:
+    url: /swagger-ui.html
+  api-docs:
+    path: /v3/api-docs
+
+
+

@@ -1,0 +1,39 @@
+server:
+  port: 8084
+
+spring:
+  application:
+    name: notification-service
+  mail:
+    properties:
+      mail:
+        smtp:
+          starttls:
+            enable: 'true'
+          auth: 'true'
+    host: smtp.gmail.com
+    username: pabitrabera2001@gmail.com
+    password: lhyc sprn yzuj ancy
+    port: '587'
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+
+eureka:
+  client:
+    enabled: true
+    fetch-registry: true
+    register-with-eureka: true
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+springdoc:
+  api-docs:
+    groups:
+      enabled: true
+    path: /notification-service/v3/api-docs
+  swagger-ui:
+    enabled: false
